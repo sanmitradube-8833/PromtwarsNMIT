@@ -1,0 +1,35 @@
+# Environments and Dependencies
+.venv/
+node_modules/
+.next/
+dist/
+build/
+
+# Cache and Temporary Files
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.coverage
+*.log
+swc.tgz
+package/
+
+# Environment Variables & Secrets
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+
+# Terraform local state
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+
+# IDE and OS
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
