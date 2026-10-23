@@ -1,0 +1,26 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    
+    // Deny all by default
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+
+    // Grocery & Fridge intake images: Authenticated user upload with size and type restrictions
+    match /intake/{userId}/{imageId} {
+      allow read: if request.auth != null && (request.auth.uid == userId || request.auth.token.role == 'admin');
+      allow write: if request.auth != null && request.auth.uid == userId
+        && request.resource.size < 10 * 1024 * 1024 // 10MB max
+        && request.resource.contentType.matches('image/(jpeg|png|webp|heic)');
+    }
+
+    // NGO verification documents (license, 80G certificate): Upload by NGO, reviewable by Admin only
+    match /verification_docs/{ngoId}/{documentId} {
+      allow read: if request.auth != null && (request.auth.uid == ngoId || request.auth.token.role == 'admin');
+      allow write: if request.auth != null && request.auth.uid == ngoId
+        && request.resource.size < 15 * 1024 * 1024
+        && request.resource.contentType.matches('(image/.*|application/pdf)');
+    }
+  }
+}
